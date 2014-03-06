@@ -38,6 +38,21 @@ def report_http_error(response)
   end
 end
 
+def query_hcitool(bt_addr)
+  cmd = "#{@config["hcitool_path"]} name #{bt_addr}"
+  puts "Executing: #{cmd}"
+  `#{cmd}`
+end
+
+def hcitool_sees_address?(bt_addr)
+  if File.exists?(@config["hcitool_path"])
+    query_hcitool(bt_addr) != ""
+  else
+    puts "WARNING: #{@config["hcitool_path"]} not found. Returning false."
+    false
+  end
+end
+
 def bluetooth_address_present?(bt_addr)
   puts "Querying for: #{bt_addr}"
   if production?
