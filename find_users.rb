@@ -3,6 +3,7 @@ require 'rubygems'
 
 require 'multi_json'
 require 'httparty'
+require 'socket'
 
 config_file_path = "./config.yml"
 
@@ -53,6 +54,11 @@ def hcitool_sees_address?(bt_addr)
   end
 end
 
+# returns the first local (non-routable) IP address.
+def local_ip
+  @local_ip ||= Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address
+end
+
 def bluetooth_address_present?(bt_addr)
   puts "Querying for: #{bt_addr}"
   if production?
@@ -94,7 +100,8 @@ response = HTTParty.post(user_locations,
   body: {
     station: {
       hostname: @config["hostname"],
-      password: @config["password"]
+      password: @config["password"],
+      ip: local_ip
     },
     user_ids: users_found.map{|u|u["id"]}
   }.to_json,
