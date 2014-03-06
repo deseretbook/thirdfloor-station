@@ -1,0 +1,11 @@
+hostname: UNIQUE_hostname
+password: some_pasword
+environment: production
+test_hcitool_response: false
+hcitool_path: /usr/bin/hcitool
+base_url: http://thirdfloor.herokuapp.com
+paths:
+  users: /users.json
+  stations: /stations.json
+  user_locations: /user_locations.json
+  
