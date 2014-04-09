@@ -8,4 +8,9 @@ paths:
   users: /users.json
   stations: /stations.json
   user_locations: /user_locations.json
-  
+  data_points: /data_points.json
+deployment_fanfare:
+  delay: 30
+  play_sound: true
+  sound_file: ./assets/victory_fanfare.mp3
+  sound_player_command: /usr/bin/omxplayer
