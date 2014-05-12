@@ -45,7 +45,7 @@ response = HTTParty.get(
 
 report_http_error(response)
 
-rpm = response.body.to_i
+rpm_json = JSON.parse(response.body)
 
 response = HTTParty.post(data_points_url,
   body: {
@@ -55,7 +55,11 @@ response = HTTParty.post(data_points_url,
       ip: local_ip
     },
     name: 'bookshelf_api_rpm',
-    data: { rpm: rpm }
+    data: {
+      rpm: rpm_json['total'],
+      version_0: rpm_json["versions"]["0"],
+      version_1: rpm_json["versions"]["1"]
+    }
   }.to_json,
   headers: default_headers
 )
