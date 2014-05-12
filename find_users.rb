@@ -119,7 +119,7 @@ report_http_error(response)
 # post to data_points controller, this will be the new standard soon.
 
 users_found.each do |user|
-  response = HTTParty.post(data_points_url,
+  response = HTTParty.post(data_points,
     body: {
       station: {
         hostname: @config["hostname"],
