@@ -17,6 +17,10 @@ def user_locations
   @config['base_url'] + @config['paths']['user_locations']
 end
 
+def data_points
+  @config['base_url'] + @config['paths']['data_points']
+end
+
 def production?
   @config["environment"] == "production"
 end
@@ -95,6 +99,8 @@ MultiJson.load(response.body)["users"].each do |user|
   end
 end
 
+# post to legacy user_locations controller. This'll go away soon.
+
 puts "Found #{users_found.size} users. Reporting."
 response = HTTParty.post(user_locations,
   body: {
@@ -110,6 +116,25 @@ response = HTTParty.post(user_locations,
 
 report_http_error(response)
 
-puts MultiJson.load(response.body).inspect
+# post to data_points controller, this will be the new standard soon.
+
+users_found.each do |user|
+  response = HTTParty.post(data_points_url,
+    body: {
+      station: {
+        hostname: @config["hostname"],
+        password: @config["password"],
+        ip: local_ip
+      },
+      name: 'user_location',
+      data: {
+        user_id: user['id']
+      }
+    }.to_json,
+    headers: default_headers
+  )
+
+  report_http_error(response)
+end
 
 puts "Run complete."
