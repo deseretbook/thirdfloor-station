@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+require "fallen"
+require "fallen/cli"
+
+require_relative '../lib/station'
+
+module StationDaemon
+  extend Fallen
+  extend Fallen::CLI
+
+  def self.run
+    station = Station.new
+    while running?
+      station.check_for_config_change
+      station.sleep
+    end
+  end
+
+  def self.usage
+    puts "Daemon for running a Thirdfloor station."
+    puts fallen_usage
+  end
+
+end
+
+case Clap.run(ARGV, StationDaemon.cli).first
+when "start"
+  StationDaemon.start!
+when "stop"
+  StationDaemon.stop!
+else
+  StationDaemon.usage
+end

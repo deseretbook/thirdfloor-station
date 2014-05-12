@@ -4,6 +4,8 @@ environment: production
 test_hcitool_response: false
 hcitool_path: /usr/bin/hcitool
 base_url: http://server.com
+config_check_delay: 30
+exit_if_config_changed: true
 paths:
   users: /users.json
   stations: /stations.json
