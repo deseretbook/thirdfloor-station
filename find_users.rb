@@ -118,23 +118,22 @@ report_http_error(response)
 
 # post to data_points controller, this will be the new standard soon.
 
-users_found.each do |user|
-  response = HTTParty.post(data_points,
-    body: {
-      station: {
-        hostname: @config["hostname"],
-        password: @config["password"],
-        ip: local_ip
-      },
-      name: 'user_location',
-      data: {
-        user_id: user['id']
-      }
-    }.to_json,
-    headers: default_headers
-  )
 
-  report_http_error(response)
-end
+response = HTTParty.post(data_points,
+  body: {
+    station: {
+      hostname: @config["hostname"],
+      password: @config["password"],
+      ip: local_ip
+    },
+    name: 'user_locations',
+    data: {
+      user_ids: users_found.map{|user| user['id']}
+    }
+  }.to_json,
+  headers: default_headers
+)
+
+report_http_error(response)
 
 puts "Run complete."
